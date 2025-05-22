@@ -1,8 +1,8 @@
 package io.hhplus.tdd.point.controller;
 
-import io.hhplus.tdd.point.dto.PointHistory;
-import io.hhplus.tdd.point.dto.TransactionType;
-import io.hhplus.tdd.point.dto.UserPoint;
+import io.hhplus.tdd.point.entity.PointHistory;
+import io.hhplus.tdd.point.entity.TransactionType;
+import io.hhplus.tdd.point.entity.UserPoint;
 import io.hhplus.tdd.point.service.PointService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
