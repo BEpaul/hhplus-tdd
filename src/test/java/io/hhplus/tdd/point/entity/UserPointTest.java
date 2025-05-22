@@ -75,7 +75,7 @@ public class UserPointTest {
         // when & then
         assertThatThrownBy(() -> userPoint.use(useAmount))
                 .isInstanceOf(NotEnoughCurrentPointException.class)
-                .hasMessageContaining("사용하려는 포인트 값이 보유 포인트보다 큽니다.");
+                .hasMessageContaining("사용하려는 포인트가 현재 보유한 포인트보다 많습니다.");
     }
 
     @DisplayName("사용하려는 포인트 값이 양수이고 보유 포인트보다 작은 경우 정상적으로 포인트를 사용한다.")
