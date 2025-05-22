@@ -39,15 +39,16 @@ public class PointController {
         return pointService.getPointHistoryByUserId(id);
     }
 
+
     /**
-     * TODO - 특정 유저의 포인트를 충전하는 기능을 작성해주세요.
+     * 특정 사용자의 포인트 충전
      */
     @PatchMapping("{id}/charge")
     public UserPoint charge(
             @PathVariable long id,
             @RequestBody long amount
     ) {
-        return new UserPoint(0, 0, 0);
+        return pointService.chargeUserPoint(id, amount);
     }
 
     /**
