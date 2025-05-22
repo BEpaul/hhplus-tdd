@@ -1,6 +1,7 @@
 package io.hhplus.tdd;
 
 import io.hhplus.tdd.exception.NotEnoughCurrentPointException;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -10,6 +11,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 class ApiControllerAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = NotEnoughCurrentPointException.class)
     public ResponseEntity<ErrorResponse> handleCustomException(Exception e) {
+        return ResponseEntity.status(400).body(new ErrorResponse("400", e.getMessage()));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException e) {
         return ResponseEntity.status(400).body(new ErrorResponse("400", e.getMessage()));
     }
 

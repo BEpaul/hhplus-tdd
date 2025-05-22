@@ -3,10 +3,12 @@ package io.hhplus.tdd.point.controller;
 import io.hhplus.tdd.point.entity.PointHistory;
 import io.hhplus.tdd.point.entity.UserPoint;
 import io.hhplus.tdd.point.service.PointService;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.List;
 @RequestMapping("/point")
 @RequiredArgsConstructor
 @Slf4j
+@Validated
 public class PointController {
 
     private final PointService pointService;
@@ -24,7 +27,7 @@ public class PointController {
      */
     @GetMapping("{id}")
     public UserPoint point(
-            @PathVariable long id
+            @PathVariable @Positive(message = "사용자 ID는 양수입니다.") long id
     ) {
         log.info("Fetching points for user with ID: {}", id);
         return pointService.getUserPointById(id);
@@ -35,7 +38,7 @@ public class PointController {
      */
     @GetMapping("{id}/histories")
     public List<PointHistory> history(
-            @PathVariable long id
+            @PathVariable @Positive(message = "사용자 ID는 양수입니다.") long id
     ) {
         log.info("Fetching point history for user with ID: {}", id);
         return pointService.getPointHistoryByUserId(id);
@@ -47,8 +50,8 @@ public class PointController {
      */
     @PatchMapping("{id}/charge")
     public UserPoint charge(
-            @PathVariable long id,
-            @RequestBody long amount
+            @PathVariable @Positive(message = "사용자 ID는 양수입니다.") long id,
+            @RequestBody @Positive(message = "충전할 포인트는 양수입니다.") long amount
     ) {
         log.info("Charging {} points to user with ID: {}", amount, id);
         return pointService.chargeUserPoint(id, amount);
@@ -59,8 +62,8 @@ public class PointController {
      */
     @PatchMapping("{id}/use")
     public UserPoint use(
-            @PathVariable long id,
-            @RequestBody long amount
+            @PathVariable @Positive(message = "사용자 ID는 양수입니다.") long id,
+            @RequestBody @Positive(message = "사용할 포인트는 양수입니다.") long amount
     ) {
         log.info("Using {} points for user with ID: {}", amount, id);
         return pointService.useUserPoint(id, amount);
