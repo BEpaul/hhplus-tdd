@@ -9,6 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.locks.Lock;
+
+import io.hhplus.tdd.lock.LockManager;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +20,7 @@ public class PointService {
 
     private final UserPointTable userPointTable;
     private final PointHistoryTable pointHistoryTable;
+    private final LockManager lockManager = new LockManager();
 
     public UserPoint getUserPointById(long id) {
         return userPointTable.selectById(id);
@@ -26,21 +31,43 @@ public class PointService {
     }
 
     public UserPoint chargeUserPoint(long userId, long amount) {
-        UserPoint userPoint = userPointTable.selectById(userId);
-        UserPoint chargedUserPoint = userPoint.charge(amount);
+        Lock lock = lockManager.getLockForUser(userId);
+        lock.lock();
+        UserPoint chargedUserPoint;
+        try {
+            UserPoint userPoint = userPointTable.selectById(userId);
+            chargedUserPoint = userPoint.charge(amount);
+            userPointTable.insertOrUpdate(userId, chargedUserPoint.point());
+        } finally {
+            lock.unlock();
+            lockManager.cleanupLock(userId, lock);
+        }
 
-        userPointTable.insertOrUpdate(userId, chargedUserPoint.point());
-        pointHistoryTable.insert(userId, amount, TransactionType.CHARGE, System.currentTimeMillis());
+        // 비동기적으로 포인트 히스토리 기록
+        CompletableFuture.runAsync(() -> 
+            pointHistoryTable.insert(userId, amount, TransactionType.CHARGE, System.currentTimeMillis())
+        );
 
         return chargedUserPoint;
     }
 
     public UserPoint useUserPoint(long userId, long amount) {
-        UserPoint userPoint = userPointTable.selectById(userId);
-        UserPoint usedUserPoint = userPoint.use(amount);
+        Lock lock = lockManager.getLockForUser(userId);
+        lock.lock();
+        UserPoint usedUserPoint;
+        try {
+            UserPoint userPoint = userPointTable.selectById(userId);
+            usedUserPoint = userPoint.use(amount);
+            userPointTable.insertOrUpdate(userId, usedUserPoint.point());
+        } finally {
+            lock.unlock();
+            lockManager.cleanupLock(userId, lock);
+        }
 
-        userPointTable.insertOrUpdate(userId, usedUserPoint.point());
-        pointHistoryTable.insert(userId, amount, TransactionType.USE, System.currentTimeMillis());
+        // 비동기적으로 포인트 히스토리 기록
+        CompletableFuture.runAsync(() -> 
+            pointHistoryTable.insert(userId, amount, TransactionType.USE, System.currentTimeMillis())
+        );
 
         return usedUserPoint;
     }
