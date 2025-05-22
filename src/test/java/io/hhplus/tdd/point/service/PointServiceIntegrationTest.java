@@ -2,7 +2,7 @@ package io.hhplus.tdd.point.service;
 
 import io.hhplus.tdd.database.PointHistoryTable;
 import io.hhplus.tdd.database.UserPointTable;
-import io.hhplus.tdd.point.entity.NotEnoughCurrentPointException;
+import io.hhplus.tdd.exception.NotEnoughCurrentPointException;
 import io.hhplus.tdd.point.entity.PointHistory;
 import io.hhplus.tdd.point.entity.TransactionType;
 import io.hhplus.tdd.point.entity.UserPoint;

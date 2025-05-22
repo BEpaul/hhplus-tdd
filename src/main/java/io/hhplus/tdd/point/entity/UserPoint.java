@@ -1,5 +1,9 @@
 package io.hhplus.tdd.point.entity;
 
+import io.hhplus.tdd.exception.NotEnoughCurrentPointException;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public record UserPoint(
         long id,
         long point,
@@ -24,6 +28,7 @@ public record UserPoint(
         }
 
         if (this.point < amount) {
+            log.warn("사용하려는 포인트가 현재 보유한 포인트보다 많습니다. 현재 포인트: {}, 사용하려는 포인트: {}", this.point, amount);
             throw new NotEnoughCurrentPointException("사용하려는 포인트가 현재 보유한 포인트보다 많습니다.");
         }
 
