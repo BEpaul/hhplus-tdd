@@ -37,7 +37,7 @@ public class PointServiceTest {
         // given
         long userId = 1L;
         UserPoint expectedUserPoint = new UserPoint(userId, 1000, System.currentTimeMillis());
-        when(userPointTable.selectById(1L)).thenReturn(expectedUserPoint);
+        when(userPointTable.selectById(userId)).thenReturn(expectedUserPoint);
 
         // when
         UserPoint actualUserPoint = pointService.getUserPointById(userId);
