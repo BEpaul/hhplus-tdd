@@ -61,4 +61,27 @@ public class PointServiceTest {
         // then
         assertEquals(expectedHistories, actualHistories);
     }
+
+    @DisplayName("특정 사용자의 포인트를 충전한다.")
+    @Test
+    void chargePoint() {
+        // given
+        long userId = 1L;
+        long currentAmount = 5000L;
+        long chargeAmount = 1000L;
+        UserPoint initialUserPoint = new UserPoint(userId, currentAmount, System.currentTimeMillis());
+        UserPoint expectedUserPoint = initialUserPoint.charge(chargeAmount);
+        PointHistory pointHistory = new PointHistory(1L, userId, chargeAmount, TransactionType.CHARGE, System.currentTimeMillis());
+
+        when(userPointTable.selectById(userId)).thenReturn(initialUserPoint);
+        when(userPointTable.insertOrUpdate(userId, expectedUserPoint.point())).thenReturn(expectedUserPoint);
+        when(pointHistoryTable.insert(userId, chargeAmount, TransactionType.CHARGE, System.currentTimeMillis())).thenReturn(pointHistory);
+
+        // when
+        UserPoint actualUserPoint = pointService.chargeUserPoint(userId, chargeAmount);
+
+        // then
+        assertEquals(expectedUserPoint.point(), actualUserPoint.point());
+        assertEquals(expectedUserPoint.id(), actualUserPoint.id());
+    }
 }
