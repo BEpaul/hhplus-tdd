@@ -88,4 +88,29 @@ public class PointServiceTest {
         assertEquals(expectedUserPoint.point(), actualUserPoint.point());
         assertEquals(expectedUserPoint.id(), actualUserPoint.id());
     }
+
+    @DisplayName("특정 사용자의 포인트를 사용한다.")
+    @Test
+    void usePoint() {
+        // given
+        long userId = 1L;
+        long currentAmount = 5000L;
+        long useAmount = 1000L;
+        long currentTime = System.currentTimeMillis();
+
+        UserPoint initialUserPoint = new UserPoint(userId, currentAmount, currentTime);
+        UserPoint expectedUserPoint = initialUserPoint.use(useAmount);
+        PointHistory pointHistory = new PointHistory(1L, userId, useAmount, TransactionType.USE, currentTime);
+
+        when(userPointTable.selectById(userId)).thenReturn(initialUserPoint);
+        when(userPointTable.insertOrUpdate(eq(userId), eq(expectedUserPoint.point()))).thenReturn(expectedUserPoint);
+        when(pointHistoryTable.insert(eq(userId), eq(useAmount), eq(TransactionType.USE), anyLong())).thenReturn(pointHistory);
+
+        // when
+        UserPoint actualUserPoint = pointService.useUserPoint(userId, useAmount);
+
+        // then
+        assertEquals(expectedUserPoint.point(), actualUserPoint.point());
+        assertEquals(expectedUserPoint.id(), actualUserPoint.id());
+    }
 }
