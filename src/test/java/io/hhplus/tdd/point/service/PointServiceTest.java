@@ -15,6 +15,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -69,13 +71,15 @@ public class PointServiceTest {
         long userId = 1L;
         long currentAmount = 5000L;
         long chargeAmount = 1000L;
-        UserPoint initialUserPoint = new UserPoint(userId, currentAmount, System.currentTimeMillis());
+        long currentTime = System.currentTimeMillis();
+
+        UserPoint initialUserPoint = new UserPoint(userId, currentAmount, currentTime);
         UserPoint expectedUserPoint = initialUserPoint.charge(chargeAmount);
-        PointHistory pointHistory = new PointHistory(1L, userId, chargeAmount, TransactionType.CHARGE, System.currentTimeMillis());
+        PointHistory pointHistory = new PointHistory(1L, userId, chargeAmount, TransactionType.CHARGE, currentTime);
 
         when(userPointTable.selectById(userId)).thenReturn(initialUserPoint);
-        when(userPointTable.insertOrUpdate(userId, expectedUserPoint.point())).thenReturn(expectedUserPoint);
-        when(pointHistoryTable.insert(userId, chargeAmount, TransactionType.CHARGE, System.currentTimeMillis())).thenReturn(pointHistory);
+        when(userPointTable.insertOrUpdate(eq(userId), eq(expectedUserPoint.point()))).thenReturn(expectedUserPoint);
+        when(pointHistoryTable.insert(eq(userId), eq(chargeAmount), eq(TransactionType.CHARGE), anyLong())).thenReturn(pointHistory);
 
         // when
         UserPoint actualUserPoint = pointService.chargeUserPoint(userId, chargeAmount);
