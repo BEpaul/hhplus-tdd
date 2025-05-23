@@ -1,5 +1,6 @@
 package io.hhplus.tdd.point.entity;
 
+import io.hhplus.tdd.exception.ExceedsMaximumPointException;
 import io.hhplus.tdd.exception.NotEnoughCurrentPointException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,22 @@ public class UserPointTest {
             currentUserPoint.charge(zeroAmount);
         });
     }
+
+    @DisplayName("충전 후 포인트가 최대 포인트를 초과하는 경우 예외가 발생한다.")
+    @Test
+    void chargeMoreThanMaximumPoint_shouldThrowsException() {
+        // given
+        long userId = 1L;
+        long currentPoint = 50000L;
+        long chargeAmount = 60000L;
+        UserPoint userPoint = new UserPoint(userId, currentPoint, System.currentTimeMillis());
+
+        // when & then
+        assertThatThrownBy(() -> userPoint.charge(chargeAmount))
+                .isInstanceOf(ExceedsMaximumPointException.class)
+                .hasMessageContaining("충전 후 포인트가 최대 포인트를 초과합니다.");
+    }
+
 
     @DisplayName("충전하려는 포인트 값이 양수이면 사용자의 포인트를 정상적으로 충전한다.")
     @Test
