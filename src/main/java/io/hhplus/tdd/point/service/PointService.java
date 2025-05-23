@@ -3,7 +3,6 @@ package io.hhplus.tdd.point.service;
 import io.hhplus.tdd.database.PointHistoryTable;
 import io.hhplus.tdd.database.UserPointTable;
 import io.hhplus.tdd.point.entity.PointHistory;
-import io.hhplus.tdd.point.entity.TransactionType;
 import io.hhplus.tdd.point.entity.UserPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +12,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.locks.Lock;
 
 import io.hhplus.tdd.lock.LockManager;
+
+import static io.hhplus.tdd.point.entity.TransactionType.*;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +46,7 @@ public class PointService {
 
         // 비동기적으로 포인트 히스토리 기록
         CompletableFuture.runAsync(() -> 
-            pointHistoryTable.insert(userId, amount, TransactionType.CHARGE, System.currentTimeMillis())
+            pointHistoryTable.insert(userId, amount, CHARGE, System.currentTimeMillis())
         );
 
         return chargedUserPoint;
@@ -65,8 +66,8 @@ public class PointService {
         }
 
         // 비동기적으로 포인트 히스토리 기록
-        CompletableFuture.runAsync(() -> 
-            pointHistoryTable.insert(userId, amount, TransactionType.USE, System.currentTimeMillis())
+        CompletableFuture.runAsync(() ->
+            pointHistoryTable.insert(userId, amount, USE, System.currentTimeMillis())
         );
 
         return usedUserPoint;

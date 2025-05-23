@@ -1,7 +1,6 @@
 package io.hhplus.tdd.point.controller;
 
 import io.hhplus.tdd.point.entity.PointHistory;
-import io.hhplus.tdd.point.entity.TransactionType;
 import io.hhplus.tdd.point.entity.UserPoint;
 import io.hhplus.tdd.point.service.PointService;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static io.hhplus.tdd.point.entity.TransactionType.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
@@ -51,8 +51,8 @@ public class PointControllerTest {
     void history() throws Exception {
         // given
         long userId = 1L;
-        PointHistory chargeHistory = new PointHistory(1L, userId, 1000, TransactionType.CHARGE, System.currentTimeMillis());
-        PointHistory useHistory = new PointHistory(2L, userId, 1000, TransactionType.USE, System.currentTimeMillis());
+        PointHistory chargeHistory = new PointHistory(1L, userId, 1000, CHARGE, System.currentTimeMillis());
+        PointHistory useHistory = new PointHistory(2L, userId, 1000, USE, System.currentTimeMillis());
 
         List<PointHistory> expectedHistories = List.of(chargeHistory, useHistory);
         when(pointService.getPointHistoryByUserId(userId)).thenReturn(expectedHistories);
