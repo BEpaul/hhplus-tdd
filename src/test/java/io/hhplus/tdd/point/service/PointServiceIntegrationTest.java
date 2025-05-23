@@ -4,7 +4,6 @@ import io.hhplus.tdd.database.PointHistoryTable;
 import io.hhplus.tdd.database.UserPointTable;
 import io.hhplus.tdd.exception.NotEnoughCurrentPointException;
 import io.hhplus.tdd.point.entity.PointHistory;
-import io.hhplus.tdd.point.entity.TransactionType;
 import io.hhplus.tdd.point.entity.UserPoint;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +13,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
 
+import static io.hhplus.tdd.point.entity.TransactionType.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -54,8 +54,8 @@ public class PointServiceIntegrationTest {
         long chargeAmount = 1000L;
         long useAmount = 500L;
 
-        historyTable.insert(userId, chargeAmount, TransactionType.CHARGE, System.currentTimeMillis());
-        historyTable.insert(userId, useAmount, TransactionType.USE, System.currentTimeMillis());
+        historyTable.insert(userId, chargeAmount, CHARGE, System.currentTimeMillis());
+        historyTable.insert(userId, useAmount, USE, System.currentTimeMillis());
 
         // when
         List<PointHistory> histories = pointService.getPointHistoryByUserId(userId);
@@ -63,9 +63,9 @@ public class PointServiceIntegrationTest {
         // then
         assertEquals(2, histories.size());
         assertEquals(chargeAmount, histories.get(0).amount());
-        assertEquals(TransactionType.CHARGE, histories.get(0).type());
+        assertEquals(CHARGE, histories.get(0).type());
         assertEquals(useAmount, histories.get(1).amount());
-        assertEquals(TransactionType.USE, histories.get(1).type());
+        assertEquals(USE, histories.get(1).type());
     }
 
     @DisplayName("양수가 아닌 포인트를 충전하려고 하면 예외가 발생한다.")

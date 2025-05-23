@@ -3,7 +3,6 @@ package io.hhplus.tdd.point.service;
 import io.hhplus.tdd.database.PointHistoryTable;
 import io.hhplus.tdd.database.UserPointTable;
 import io.hhplus.tdd.point.entity.PointHistory;
-import io.hhplus.tdd.point.entity.TransactionType;
 import io.hhplus.tdd.point.entity.UserPoint;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
+import static io.hhplus.tdd.point.entity.TransactionType.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
@@ -51,8 +51,8 @@ public class PointServiceTest {
     void getPointHistoryByUserId() {
         // given
         long userId = 1L;
-        PointHistory chargeHistory = new PointHistory(1L, userId, 1000, TransactionType.CHARGE, System.currentTimeMillis());
-        PointHistory useHistory = new PointHistory(2L, userId, 500, TransactionType.USE, System.currentTimeMillis());
+        PointHistory chargeHistory = new PointHistory(1L, userId, 1000, CHARGE, System.currentTimeMillis());
+        PointHistory useHistory = new PointHistory(2L, userId, 500, USE, System.currentTimeMillis());
 
         List<PointHistory> expectedHistories = List.of(chargeHistory, useHistory);
         when(pointHistoryTable.selectAllByUserId(userId)).thenReturn(expectedHistories);
@@ -75,11 +75,11 @@ public class PointServiceTest {
 
         UserPoint initialUserPoint = new UserPoint(userId, currentAmount, currentTime);
         UserPoint expectedUserPoint = initialUserPoint.charge(chargeAmount);
-        PointHistory pointHistory = new PointHistory(1L, userId, chargeAmount, TransactionType.CHARGE, currentTime);
+        PointHistory pointHistory = new PointHistory(1L, userId, chargeAmount, CHARGE, currentTime);
 
         when(userPointTable.selectById(userId)).thenReturn(initialUserPoint);
         when(userPointTable.insertOrUpdate(eq(userId), eq(expectedUserPoint.point()))).thenReturn(expectedUserPoint);
-        when(pointHistoryTable.insert(eq(userId), eq(chargeAmount), eq(TransactionType.CHARGE), anyLong())).thenReturn(pointHistory);
+        when(pointHistoryTable.insert(eq(userId), eq(chargeAmount), eq(CHARGE), anyLong())).thenReturn(pointHistory);
 
         // when
         UserPoint actualUserPoint = pointService.chargeUserPoint(userId, chargeAmount);
@@ -100,11 +100,11 @@ public class PointServiceTest {
 
         UserPoint initialUserPoint = new UserPoint(userId, currentAmount, currentTime);
         UserPoint expectedUserPoint = initialUserPoint.use(useAmount);
-        PointHistory pointHistory = new PointHistory(1L, userId, useAmount, TransactionType.USE, currentTime);
+        PointHistory pointHistory = new PointHistory(1L, userId, useAmount, USE, currentTime);
 
         when(userPointTable.selectById(userId)).thenReturn(initialUserPoint);
         when(userPointTable.insertOrUpdate(eq(userId), eq(expectedUserPoint.point()))).thenReturn(expectedUserPoint);
-        when(pointHistoryTable.insert(eq(userId), eq(useAmount), eq(TransactionType.USE), anyLong())).thenReturn(pointHistory);
+        when(pointHistoryTable.insert(eq(userId), eq(useAmount), eq(USE), anyLong())).thenReturn(pointHistory);
 
         // when
         UserPoint actualUserPoint = pointService.useUserPoint(userId, useAmount);
