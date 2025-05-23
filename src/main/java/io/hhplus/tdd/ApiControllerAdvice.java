@@ -1,5 +1,6 @@
 package io.hhplus.tdd;
 
+import io.hhplus.tdd.exception.ExceedsMaximumPointException;
 import io.hhplus.tdd.exception.NotEnoughCurrentPointException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @RestControllerAdvice
 class ApiControllerAdvice extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(value = NotEnoughCurrentPointException.class)
+    @ExceptionHandler(value = {
+            NotEnoughCurrentPointException.class,
+            ExceedsMaximumPointException.class
+    })
     public ResponseEntity<ErrorResponse> handleCustomException(Exception e) {
         return ResponseEntity.status(400).body(new ErrorResponse("400", e.getMessage()));
     }
