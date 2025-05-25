@@ -2,6 +2,7 @@ package io.hhplus.tdd.point.controller;
 
 import io.hhplus.tdd.point.entity.PointHistory;
 import io.hhplus.tdd.point.entity.UserPoint;
+import io.hhplus.tdd.point.service.IPointService;
 import io.hhplus.tdd.point.service.PointService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,7 @@ public class PointControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private PointService pointService;
+    private IPointService pointService;
 
     @DisplayName("특정 ID를 가진 사용자의 포인트를 조회한다.")
     @Test

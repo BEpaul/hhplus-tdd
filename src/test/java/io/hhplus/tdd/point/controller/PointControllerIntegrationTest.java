@@ -1,6 +1,7 @@
 package io.hhplus.tdd.point.controller;
 
 import io.hhplus.tdd.point.entity.UserPoint;
+import io.hhplus.tdd.point.service.IPointService;
 import io.hhplus.tdd.point.service.PointService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ public class PointControllerIntegrationTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private PointService pointService;
+    private IPointService pointService;
 
     /**
      * 올바른 요청

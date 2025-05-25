@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class PointServiceIntegrationTest {
 
     @Autowired
-    private PointService pointService;
+    private IPointService pointService;
 
     @Autowired
     private PointHistoryTable historyTable;
