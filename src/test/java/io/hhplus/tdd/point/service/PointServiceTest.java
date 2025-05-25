@@ -18,6 +18,7 @@ import static io.hhplus.tdd.point.entity.TransactionType.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -89,6 +90,7 @@ public class PointServiceTest {
         // then
         assertEquals(expectedUserPoint.point(), actualUserPoint.point());
         assertEquals(expectedUserPoint.id(), actualUserPoint.id());
+        verify(pointHistoryTable).insert(eq(userId), eq(chargeAmount), eq(CHARGE), anyLong());
     }
 
     @DisplayName("특정 사용자의 포인트를 사용한다.")
