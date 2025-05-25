@@ -2,7 +2,7 @@ package io.hhplus.tdd.point.controller;
 
 import io.hhplus.tdd.point.entity.PointHistory;
 import io.hhplus.tdd.point.entity.UserPoint;
-import io.hhplus.tdd.point.service.PointService;
+import io.hhplus.tdd.point.service.IPointService;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import java.util.List;
 @Validated
 public class PointController {
 
-    private final PointService pointService;
+    private final IPointService pointService;
 
     /**
      * 특정 사용자 포인트 조회

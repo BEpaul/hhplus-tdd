@@ -3,6 +3,7 @@ package io.hhplus.tdd.point.lock;
 import io.hhplus.tdd.database.PointHistoryTable;
 import io.hhplus.tdd.database.UserPointTable;
 import io.hhplus.tdd.point.entity.UserPoint;
+import io.hhplus.tdd.point.service.IPointService;
 import io.hhplus.tdd.point.service.PointService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ConcurrencyTest {
 
     @Autowired
-    private PointService pointService;
+    private IPointService pointService;
 
     @Autowired
     private UserPointTable userPointTable;
